@@ -4,21 +4,29 @@ import lab4.client.*;
 import lab4.gui.*;
 
 public class GomokuMain {
-	static int standartPort = 4000;
-	static int usedPort;
-	public static void main(String[] args){
-		if(args.length > 1){
-			// to long
-			System.out.println("to many arguments");
-		} else if(args.length < 1){
-			// no port argument
-			usedPort = standartPort;
-		} else {
-			// exactly one port argument
-			usedPort = Integer.parseInt(args[0]);
+	public static void main(String[] args){ //Port Number as argument.
+		int port1;
+		int port2;
+		try {
+			port1 = Integer.parseInt(args[0]);
 		}
-		GomokuClient gmClient = new GomokuClient(usedPort);
-		GomokuGameState gmState = new GomokuGameState(gmClient);
-		GomokuGUI gmGUI = new GomokuGUI(gmState, gmClient);
+		catch(Exception e){
+			port1 = 5000;
+		}
+		try {
+			port2 = Integer.parseInt(args[1]);
+		}
+		catch(Exception e){
+			port2 = 5001;
+		}
+		GomokuClient clientOne = new GomokuClient(port1);
+		GomokuGameState gameStateOne = new GomokuGameState(clientOne);
+		GomokuGUI GUIone = new GomokuGUI(gameStateOne, clientOne);
+		
+		GomokuClient clientTwo = new GomokuClient(port2);
+		GomokuGameState gameStateTwo = new GomokuGameState(clientTwo);
+		GomokuGUI GUItwo = new GomokuGUI(gameStateTwo, clientTwo);
+		
 	}
+	
 }
