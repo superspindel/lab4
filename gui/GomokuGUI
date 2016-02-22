@@ -70,26 +70,17 @@ public class GomokuGUI implements Observer{
 		
 		connectButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				if(e.getActionCommand() == "Connect")
-				{
 					conWindow = new ConnectionWindow(client); 
-				}
 			}
 		});
 		newGameButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				if(e.getActionCommand() == "New game")
-				{
 					gamestate.newGame();
-				}
 			}
 		});
 		disconnectButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				if(e.getActionCommand() == "Disconnect")
-				{
 					gamestate.disconnect();
-				}
 			}
 		});
 		
