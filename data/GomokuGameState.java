@@ -1,6 +1,3 @@
-/*
- * Created on 2007 feb 8
- */
 package lab4.data;
 
 import java.util.Observable;
@@ -9,7 +6,9 @@ import java.util.Observer;
 import lab4.client.GomokuClient;
 
 /**
+ * @author Viktor and Jonas
  * Represents the state of a game
+ * Uses integer values to determine the state of the game and the appropriate actions that can take place.
  */
 
 public class GomokuGameState extends Observable implements Observer{
@@ -28,11 +27,12 @@ public class GomokuGameState extends Observable implements Observer{
 	private GomokuClient client;
 	
 	private String message;
-	
+
 	/**
-	 * The constructor
 	 * 
-	 * @param gc The client used to communicate with the other player
+	 * @param gc the Client of the game
+	 * creates a new GameGrid with the default size,
+	 * sets current state to not started.
 	 */
 	public GomokuGameState(GomokuClient gc){
 		client = gc;
@@ -41,35 +41,36 @@ public class GomokuGameState extends Observable implements Observer{
 		currentState = NOT_STARTED;
 		gameGrid = new GameGrid(DEFAULT_SIZE);
 	}
-	
+	/**
+	 * 
+	 * @return the Default size for the GUI JFrame settings.
+	 */
 	public int getDEFAULT_SIZE()
 	{
 		return DEFAULT_SIZE;
 	}
 	/**
-	 * Returns the message string
 	 * 
-	 * @return the message string
+	 * @return the message to display on the messageLabel in the GUI.
 	 */
 	public String getMessageString(){
 		return this.message;
 	}
 	
 	/**
-	 * Returns the game grid
 	 * 
-	 * @return the game grid
+	 * @return this gameGrid so that the GamePanel can be setup with the correct grid in the GUI.
 	 */
 	public GameGrid getGameGrid(){
 		return this.gameGrid;
 	}
-
 	/**
-	 * This player makes a move at a specified location
 	 * 
-	 * @param x the x coordinate
-	 * @param y the y coordinate
+	 * @param x the coordinate
+	 * @param y the coordinate
+	 * will perform move if possible otherwise display a message that shows why that move can't be performed.
 	 */
+
 	public void move(int x, int y){
 		if((this.currentState != this.MY_TURN))
 		{
@@ -110,10 +111,11 @@ public class GomokuGameState extends Observable implements Observer{
 			ChangeNotify();
 		}
 	}
-	
 	/**
-	 * Starts a new game with the current client
+	 * Setup gamestate for a new game by clearing the grid, setting current state and displaying the message.
+	 * also sends notification to the client aswell as to the GamePanel to repaint the board.
 	 */
+
 	public void newGame(){
 		
 		this.gameGrid.clearGrid();
@@ -122,11 +124,11 @@ public class GomokuGameState extends Observable implements Observer{
 		client.sendNewGameMessage();
 		ChangeNotify();
 	}
-	
 	/**
-	 * Other player has requested a new game, so the 
-	 * game state is changed accordingly
+	 * same as above only now you receive the new game from another client,
+	 * clear grid, set state and display message aswell as the notify of repaint.
 	 */
+
 	public void receivedNewGame(){
 		
 		this.gameGrid.clearGrid();
@@ -135,11 +137,11 @@ public class GomokuGameState extends Observable implements Observer{
 		ChangeNotify();
 		
 	}
-	
 	/**
-	 * The connection to the other player is lost, 
-	 * so the game is interrupted
+	 * Opponent disconnects
+	 * clear grid, set state and display message aswell as setChanged and notify observers.
 	 */
+
 	public void otherGuyLeft(){
 		
 		this.gameGrid.clearGrid();
@@ -147,10 +149,11 @@ public class GomokuGameState extends Observable implements Observer{
 		this.message = "Opponent disconnected from the game";
 		ChangeNotify();
 	}
-	
 	/**
-	 * The player disconnects from the client
+	 * Disconnect from game
+	 * clear grid, set message and state, notify and send information to the client to disconnect.
 	 */
+
 	public void disconnect(){
 		
 		this.gameGrid.clearGrid();
@@ -159,13 +162,13 @@ public class GomokuGameState extends Observable implements Observer{
 		ChangeNotify();
 		client.disconnect();
 	}
-	
 	/**
-	 * The player receives a move from the other player
 	 * 
-	 * @param x The x coordinate of the move
-	 * @param y The y coordinate of the move
+	 * @param x the x-coordinate
+	 * @param y the y-coordinate
+	 * Perform a move for the opposing player and check if he has won.
 	 */
+	
 	public void receivedMove(int x, int y){
 		this.gameGrid.move(x, y, GameGrid.OTHER);
 		if(this.gameGrid.isWinner(GameGrid.OTHER)){
@@ -179,6 +182,9 @@ public class GomokuGameState extends Observable implements Observer{
 		}
 		ChangeNotify();
 	}
+	/**
+	 * what to do if this class gets notified of a change from someone it observs.
+	 */
 	
 	public void update(Observable o, Object arg) {
 		
@@ -192,10 +198,11 @@ public class GomokuGameState extends Observable implements Observer{
 			currentState = OTHER_TURN;
 			break;
 		}
-		ChangeNotify();
-		
-		
+		ChangeNotify();	
 	}
+	/**
+	 * condensed the setChanged and notifyObservers to one function.
+	 */
 	private void ChangeNotify()
 	{
 		setChanged();
