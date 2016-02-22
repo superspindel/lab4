@@ -1,3 +1,141 @@
+/*
+package lab4.data;
+
+import java.util.Observable;
+
+public class GameGrid extends Observable{
+	private int[][] gridArray;
+	private int size;
+	public static final int EMPTY = 0;
+	public static final int ME = 1;
+	public static final int OTHER = 2;
+	public static int INROW = 5;
+	
+
+	public GameGrid(int size)
+	{
+		this.size = size;
+		this.gridArray = new int[size][size];
+		this.clearGrid();
+	}
+
+	public int getLocation(int x, int y){
+		return this.gridArray[x][y];
+	}
+	
+
+	public int getSize(){
+		return this.size;
+	}
+	
+
+	public boolean move(int x, int y, int player){
+		if(this.gridArray[x][y] == EMPTY){
+			this.gridArray[x][y] = player;
+			ChangeNotify();
+			return true;
+		} 
+		else 
+		{
+			return false;
+		}
+	}
+	
+
+	public void clearGrid()
+	{
+		for(int i = 0; i<this.size; i++)
+		{
+			for(int k = 0; k<this.size; k++)
+			{
+				this.gridArray[i][k] = EMPTY;
+			}
+		}
+		ChangeNotify();
+	}
+	
+
+	public boolean isWinner(int player)
+	{
+		for(int i = 0; i<this.size; i++)
+		{
+			for(int k = 0; k<this.size; k++){
+				int winning = 0;
+				if(getLocation(i, k) == player){
+					for(int j = k; j<this.size; j++)
+					{
+						winning++;
+						if(getLocation(i, j) != player)
+						{
+							break;
+						}
+						else if(winning == INROW)
+						{
+							return true;
+						}
+					}
+					winning = 0;
+					for(int p = i; p<this.size; p++)
+					{
+						winning++;
+						if(getLocation(p, k) != player)
+						{
+							break;
+						}
+						else if(winning == INROW)
+						{
+							return true;
+						}
+					}
+					int diagUpX = i;
+					int diagUpY = k;
+					winning = 0;
+					while(diagUpX < this.size && diagUpY >= 0)
+					{
+						winning++;
+						if(getLocation(diagUpX, diagUpY) != player)
+						{
+							break;
+						}
+						else if(winning == INROW)
+						{
+							return true;
+						}
+						diagUpX++;
+						diagUpY--;
+					}
+					int diagDownX = i;
+					int diagDownY = k;
+					winning = 0;
+					while(diagDownX < this.size && diagDownY < this.size)
+					{
+						winning++;
+						if(getLocation(diagDownX, diagDownY) != player)
+						{
+							break;
+						}
+						else if(winning == INROW)
+						{
+							return true;
+						}
+						diagDownX++;
+						diagDownY++;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	private void ChangeNotify()
+	{
+		setChanged();
+		notifyObservers();
+	}
+	
+	
+}
+*/
+
 package lab4.data;
 
 import java.util.Observable;
