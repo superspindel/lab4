@@ -209,7 +209,7 @@ public class GameGrid extends Observable {
 			return false;
 
 		} else {
-			ME = board[x][y];
+			player = board[x][y];
 			setChanged();
 			notifyObservers();
 		}
@@ -240,16 +240,18 @@ public class GameGrid extends Observable {
 		int counter = 0;
 		for (int x = 0; x < board.length; x++) {
 			for (int y = 0; y < board[x].length; y++) {
-
-				for (int i = 0; x + i < board.length && getLocation(x + i++, y) == player;) {
+				
+				counter = 0;
+				for (int i = 0; x < board.length && board[x + i++][y] == player;) {
 					counter++;
-					if (counter == INROW) {
+					if (counter >= INROW) {
 						return true;
 					}
 				}
-				for (int i = 0; y + i < board[x].length && getLocation(x, y + i++) == player;) {
+				counter = 0;
+				for (int i = 0; y < board[x].length && board[x][y + i++] == player;) {
 					counter++;
-					if (counter == INROW) {
+					if (counter >= INROW) {
 						return true;
 					}
 
@@ -271,19 +273,20 @@ public class GameGrid extends Observable {
 		int counter = 0;
 		for (int x = 0; x < board.length; x++) {
 			for (int y = 0; y < board[x].length; y++) {
-
+				counter = 0;
 				int z = 0;
-				for (int i = 0; x + i < board.length && getLocation(x + i++, y + z++) == player;) {
+				for (int i = 0; x < board.length && board[x + i++][y + z++] == player;) {
 					counter++;
-					if (counter == INROW) {
+					if (counter >= INROW) {
 						return true;
 					}
 
 				}
+				counter = 0;
 				z = 0;
-				for (int i = 0; y + i < board[x].length && getLocation(x + i++, y - z++) == player;) {
+				for (int i = 0; y < board[x].length && board[x + i++][y - z++] == player;) {
 					counter++;
-					if (counter == INROW) {
+					if (counter >= INROW) {
 						return true;
 					}
 				}
