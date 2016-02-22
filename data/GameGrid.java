@@ -146,10 +146,9 @@ import java.util.Observable;
 
 public class GameGrid extends Observable {
 
-	public static int EMPTY;
-	public static int ME;
-	public static int OTHER;
-	public static int player;
+	public static int EMPTY = 0;
+	public static int ME = 1;
+	public static int OTHER = 2 ;
 	private int INROW = 5;
 	private int board[][];
 
@@ -209,7 +208,7 @@ public class GameGrid extends Observable {
 			return false;
 
 		} else {
-			player = board[x][y];
+			board[x][y] = player;
 			setChanged();
 			notifyObservers();
 		}
@@ -221,7 +220,7 @@ public class GameGrid extends Observable {
 	 */
 	public void clearGrid() {
 		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; i < board[i].length; j++) {
+			for (int j = 0; j < board[i].length; j++) {
 				board[i][j] = EMPTY;
 			}
 		}
@@ -242,19 +241,25 @@ public class GameGrid extends Observable {
 			for (int y = 0; y < board[x].length; y++) {
 				
 				counter = 0;
-				for (int i = 0; x < board.length && board[x + i++][y] == player;) {
-					counter++;
-					if (counter >= INROW) {
-						return true;
+				for (int i = 0; x + i< board.length;) {
+					if(board[x + i++][y] == player){
+						counter++;
+						if (counter == INROW) {
+							return true;
+						}
 					}
+					break;
+				
 				}
 				counter = 0;
-				for (int i = 0; y < board[x].length && board[x][y + i++] == player;) {
-					counter++;
-					if (counter >= INROW) {
-						return true;
+				for (int i = 0; y + i < board[x].length;) {
+					if(board[x][y + i++] == player){
+						counter++;
+						if (counter == INROW) {
+							return true;
+						}
 					}
-
+					break;
 				}
 			}
 		}
@@ -273,22 +278,30 @@ public class GameGrid extends Observable {
 		int counter = 0;
 		for (int x = 0; x < board.length; x++) {
 			for (int y = 0; y < board[x].length; y++) {
+				
 				counter = 0;
 				int z = 0;
-				for (int i = 0; x < board.length && board[x + i++][y + z++] == player;) {
-					counter++;
-					if (counter >= INROW) {
-						return true;
+				for (int i = 0; x + i < board.length && y + z < board[x].length;) {
+					if(board[x + i++][y + z++] == player){
+						counter++;
+						if (counter == INROW) {
+							return true;
+						}
 					}
+					break;
 
 				}
 				counter = 0;
 				z = 0;
-				for (int i = 0; y < board[x].length && board[x + i++][y - z++] == player;) {
-					counter++;
-					if (counter >= INROW) {
-						return true;
+				for (int i = 0; y + i < board[x].length && y + z < board[x].length;) {
+					if(board[x + i++][y - z++] == player){
+						counter++;
+						if (counter == INROW) {
+							return true;
+						}
 					}
+					break;
+					
 				}
 			}
 		}
