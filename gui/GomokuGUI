@@ -1,9 +1,17 @@
 package lab4.gui;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
 import lab4.client.GomokuClient;
-import lab4.data.GameGrid;
 import lab4.data.GomokuGameState;
 
 /*
@@ -14,6 +22,13 @@ public class GomokuGUI implements Observer{
 
 	private GomokuClient client;
 	private GomokuGameState gamestate;
+	
+	GamePanel gameGridPanel;
+	JLabel messageLabel;
+	JButton connectButton;
+	JButton newGameButton;
+	JButton disconnectButton;
+	ConnectionWindow conWindow;
 	
 	/**
 	 * The constructor
@@ -26,6 +41,75 @@ public class GomokuGUI implements Observer{
 		this.gamestate = g;
 		client.addObserver(this);
 		gamestate.addObserver(this);
+		
+		gameGridPanel = new GamePanel(gamestate.getGameGrid());
+		gameGridPanel.setVisible(true);
+		
+		JFrame gameFrame = new JFrame();
+		gameFrame.setTitle("Gomoku Game");
+		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		gameFrame.setVisible(true);
+		gameFrame.setResizable(true);
+		int extraSize = 40;
+		int gameFrameWidth = gameGridPanel.getUNIT_SIZE()*gamestate.getDEFAULT_SIZE()+extraSize;
+		int gameFrameHeight = gameGridPanel.getUNIT_SIZE()*gamestate.getDEFAULT_SIZE()+extraSize*2;
+		gameFrame.setSize(gameFrameWidth, gameFrameHeight);
+
+		
+		messageLabel = new JLabel();
+		connectButton = new JButton("Connect");
+		newGameButton = new JButton("New game");
+		disconnectButton = new JButton("Disconnect");
+		
+		gameGridPanel.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent e) {
+				int[] position = gameGridPanel.getGridPosition(e.getX(), e.getY());
+				gamestate.move(position[0], position[1]);
+			}
+		});
+		
+		connectButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				if(e.getActionCommand() == "Connect")
+				{
+					conWindow = new ConnectionWindow(client); 
+				}
+			}
+		});
+		newGameButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				if(e.getActionCommand() == "New game")
+				{
+					gamestate.newGame();
+				}
+			}
+		});
+		disconnectButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				if(e.getActionCommand() == "Disconnect")
+				{
+					gamestate.disconnect();
+				}
+			}
+		});
+		
+		Box buttonBox = Box.createHorizontalBox();
+		buttonBox.add(connectButton);
+		buttonBox.add(newGameButton);
+		buttonBox.add(disconnectButton);
+		
+		Box textBox = Box.createHorizontalBox();
+		textBox.add(messageLabel);
+		
+		Box gameBox = Box.createVerticalBox();
+		gameBox.add(gameGridPanel);
+		gameBox.add(buttonBox);
+		gameBox.add(textBox);
+		
+		gameFrame.add(gameBox);
+		messageLabel.setText("Welcome to Gomoku!");
+		
+		
 		
 		
 	}
