@@ -17,8 +17,6 @@ public class GomokuGameState extends Observable implements Observer{
    // Game variables
 	private final int DEFAULT_SIZE = 15;
 	private GameGrid gameGrid;
-	private final int otherPlayer = 2;
-	private final int mePlayer = 1;
 	
     //Possible game states
 	private final int NOT_STARTED = 0;
@@ -44,7 +42,10 @@ public class GomokuGameState extends Observable implements Observer{
 		gameGrid = new GameGrid(DEFAULT_SIZE);
 	}
 	
-
+	public int getDEFAULT_SIZE()
+	{
+		return DEFAULT_SIZE;
+	}
 	/**
 	 * Returns the message string
 	 * 
@@ -84,15 +85,14 @@ public class GomokuGameState extends Observable implements Observer{
 			{
 				this.message = "Game finished";
 			}
-			setChanged();
-			notifyObservers();
+			ChangeNotify();
 		} 
 		else 
 		{
-			if(this.gameGrid.move(x, y, this.mePlayer))
+			if(this.gameGrid.move(x, y, GameGrid.ME))
 			{
 				this.client.sendMoveMessage(x, y);
-				if(this.gameGrid.isWinner(1))
+				if(this.gameGrid.isWinner(GameGrid.ME))
 				{
 					this.message = "Game finished you won";
 					this.currentState = this.FINISHED_GAME;
@@ -107,8 +107,7 @@ public class GomokuGameState extends Observable implements Observer{
 			{
 				this.message = "Invalid move";
 			}
-			setChanged();
-			notifyObservers();
+			ChangeNotify();
 		}
 	}
 	
@@ -116,12 +115,12 @@ public class GomokuGameState extends Observable implements Observer{
 	 * Starts a new game with the current client
 	 */
 	public void newGame(){
+		
 		this.gameGrid.clearGrid();
 		this.currentState = this.OTHER_TURN;
 		this.message = "Opponents turn";
 		client.sendNewGameMessage();
-		setChanged();
-		notifyObservers();
+		ChangeNotify();
 	}
 	
 	/**
@@ -129,11 +128,12 @@ public class GomokuGameState extends Observable implements Observer{
 	 * game state is changed accordingly
 	 */
 	public void receivedNewGame(){
+		
 		this.gameGrid.clearGrid();
 		this.currentState = this.MY_TURN;
 		this.message = "Your turn";
-		setChanged();
-		notifyObservers();
+		ChangeNotify();
+		
 	}
 	
 	/**
@@ -141,22 +141,22 @@ public class GomokuGameState extends Observable implements Observer{
 	 * so the game is interrupted
 	 */
 	public void otherGuyLeft(){
+		
 		this.gameGrid.clearGrid();
 		this.currentState = this.NOT_STARTED;
 		this.message = "Opponent disconnected from the game";
-		setChanged();
-		notifyObservers();
+		ChangeNotify();
 	}
 	
 	/**
 	 * The player disconnects from the client
 	 */
 	public void disconnect(){
+		
 		this.gameGrid.clearGrid();
 		this.currentState = this.NOT_STARTED;
 		this.message = "You disconnected from the game";
-		setChanged();
-		notifyObservers();
+		ChangeNotify();
 		client.disconnect();
 	}
 	
@@ -167,8 +167,8 @@ public class GomokuGameState extends Observable implements Observer{
 	 * @param y The y coordinate of the move
 	 */
 	public void receivedMove(int x, int y){
-		this.gameGrid.move(x, y, this.otherPlayer);
-		if(this.gameGrid.isWinner(this.otherPlayer)){
+		this.gameGrid.move(x, y, GameGrid.OTHER);
+		if(this.gameGrid.isWinner(GameGrid.OTHER)){
 			this.message = "The other player has won";
 			this.currentState = this.FINISHED_GAME;
 		}
@@ -177,8 +177,7 @@ public class GomokuGameState extends Observable implements Observer{
 			this.message = "Your turn";
 			this.currentState = this.MY_TURN;
 		}
-		setChanged();
-		notifyObservers();
+		ChangeNotify();
 	}
 	
 	public void update(Observable o, Object arg) {
@@ -193,10 +192,14 @@ public class GomokuGameState extends Observable implements Observer{
 			currentState = OTHER_TURN;
 			break;
 		}
+		ChangeNotify();
+		
+		
+	}
+	private void ChangeNotify()
+	{
 		setChanged();
 		notifyObservers();
-		
-		
 	}
 	
 }
