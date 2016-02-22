@@ -14,8 +14,10 @@ import javax.swing.JLabel;
 import lab4.client.GomokuClient;
 import lab4.data.GomokuGameState;
 
-/*
- * The GUI class
+/**
+ * @author Viktor and Jonas
+ * the GUI class represents the playing window and implements the buttons, the gameboard and the messagelabel into
+ * the frame when playing.
  */
 
 public class GomokuGUI implements Observer{
@@ -31,11 +33,16 @@ public class GomokuGUI implements Observer{
 	ConnectionWindow conWindow;
 	
 	/**
-	 * The constructor
 	 * 
-	 * @param g   The game state that the GUI will visualize
-	 * @param c   The client that is responsible for the communication
+	 * @param g the gameState to be shown
+	 * @param c the gameClient to be used
+	 * @setup 	the GamePanel to be shows as the playing board,
+	 * 			JFrame and the settings for the frame,
+	 * 			Creating components for the buttons and the label,
+	 * 			setting up mouseListener and ActionListener for buttons and GamePanel,
+	 * 			using boxes to create the shape for the JFrame.
 	 */
+	
 	public GomokuGUI(GomokuGameState g, GomokuClient c){
 		this.client = c;
 		this.gamestate = g;
@@ -43,16 +50,15 @@ public class GomokuGUI implements Observer{
 		gamestate.addObserver(this);
 		
 		gameGridPanel = new GamePanel(gamestate.getGameGrid());
-		gameGridPanel.setVisible(true);
 		
 		JFrame gameFrame = new JFrame();
 		gameFrame.setTitle("Gomoku Game");
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.setVisible(true);
 		gameFrame.setResizable(true);
-		int extraSize = 40;
+		int extraSize = 25;
 		int gameFrameWidth = gameGridPanel.getUNIT_SIZE()*gamestate.getDEFAULT_SIZE()+extraSize;
-		int gameFrameHeight = gameGridPanel.getUNIT_SIZE()*gamestate.getDEFAULT_SIZE()+extraSize*2;
+		int gameFrameHeight = gameGridPanel.getUNIT_SIZE()*gamestate.getDEFAULT_SIZE()+extraSize*3;
 		gameFrame.setSize(gameFrameWidth, gameFrameHeight);
 
 		
